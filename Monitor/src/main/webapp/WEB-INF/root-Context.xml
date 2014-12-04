@@ -1,34 +1,40 @@
-<beans xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-   xmlns:http-conf="http://cxf.apache.org/transports/http/configuration"
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:context="http://www.springframework.org/schema/context"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xmlns="http://www.springframework.org/schema/beans"
+   xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+   xmlns:http-conf="http://cxf.apache.org/transports/http/configuration"
    xmlns:util="http://www.springframework.org/schema/util"
-xsi:schemaLocation="http://cxf.apache.org/jaxrs
-http://www.springframework.org/schema/beans 
-http://www.springframework.org/schema/beans/spring-beans-4.0.0.xsd 
-http://cxf.apache.org/schemas/jaxrs.xsd
-http://www.springframework.org/schema/util
-	http://www.springframework.org/schema/util/spring-util-4.0.0.xsd 
-      http://cxf.apache.org/transports/http/configuration 
-      http://cxf.apache.org/schemas/configuration/http-conf.xsd">
+    
+   xsi:schemaLocation="
+   http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+      http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd 
+      http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd">
       
+      <bean id="MonthlySpending" class="com.main.spendwisely.server.interfaceImpl.MonthlySpendingImpl"></bean> 
  <import resource="classpath:META-INF/cxf/cxf.xml" />
    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" /> 
-   <import resource="classpath:META-INF/cxf/cxf-extension-xml.xml"></import>
-   <jaxrs:server id="mainJaxrs" address="/">
-   <jaxrs:providers>
-   <bean id="jaxbProvider" class="org.apache.cxf.jaxrs.provider.JAXBElementProvider">
-   <property name="marshallerProperties" ref="propertiesMap"/>
-</bean>
-<util:map id="propertiesMap">
+   
+   <util:map id="myPropertyMap">
 <entry key="jaxb.formatted.output">
    <value type="java.lang.Boolean">true</value>
 </entry>
 </util:map>
+
+   <jaxrs:server id="mainJaxrs" address="/">
+   <jaxrs:providers>
+   <bean id="jaxbProvider" class="org.apache.cxf.jaxrs.provider.JAXBElementProvider">
+   <property name="marshallerProperties" ref="myPropertyMap"/>
+</bean>
+    
+   
    </jaxrs:providers>
    <jaxrs:serviceBeans>
-   <bean class="com.main.spendwisely.server.interfaces.MonthlySpending"></bean> 
+   <ref bean="MonthlySpending"/>
    </jaxrs:serviceBeans>
+   
+   
    
    
    </jaxrs:server>    
