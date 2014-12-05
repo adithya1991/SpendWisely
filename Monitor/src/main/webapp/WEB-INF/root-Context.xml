@@ -12,7 +12,8 @@
       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd 
       http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd">
       
-      <bean id="MonthlySpending" class="com.main.spendwisely.server.interfaceImpl.MonthlySpendingImpl"></bean> 
+      
+       
  <import resource="classpath:META-INF/cxf/cxf.xml" />
    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" /> 
    
@@ -27,6 +28,7 @@
    <bean id="jaxbProvider" class="org.apache.cxf.jaxrs.provider.JAXBElementProvider">
    <property name="marshallerProperties" ref="myPropertyMap"/>
 </bean>
+  <bean class="com.main.spendwisely.util.SpendwiselyExceptionMapper"></bean>
     
    
    </jaxrs:providers>
