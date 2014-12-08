@@ -11,11 +11,33 @@ import com.main.spendwisely.server.interfaces.MonthlySpending;
 @Service("MonthlySpending")
 public class MonthlySpendingImpl implements MonthlySpending {
 
-  public void addAmount(double amount, Date from, Date to) {
+@Override
+  public void addAmount(double amount, int fromMonth, int toMonth) {
     // Testing(throw exception which is caught by exception mapper;
 
     throw new SpendWiselyException("Yooo", ErrorCodesType.INTERNAL_ERROR.getErrorCode());
 
   }
+
+@Override
+public void repeatedExpense(double amount, int fromMonth, int toMonth,String body) {
+
+	
+	
+}
+
+@Override
+public void retrieveExpenses(Date month) {
+	
+	
+}
+
+@Override
+public void addExtraAmount(double amount, Date month) {
+	// TODO Auto-generated method stub
+	
+}
+
+
 
 }
