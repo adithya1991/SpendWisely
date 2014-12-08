@@ -10,6 +10,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+
+import com.main.spendwisely.dto.MonthlyDto;
+
+
 @Path("Monthly")
 public interface MonthlySpending {
   @GET
@@ -28,13 +32,13 @@ public interface MonthlySpending {
 	@GET
 	@Consumes(MediaType.APPLICATION_XML)
 	  @Produces(MediaType.APPLICATION_XML)
-	  public void retrieveExpenses(@QueryParam("month") Date month);
+	  public MonthlyDto retrieveExpenses(@QueryParam("fromMonth") int fromMonth,@QueryParam("toMonth") int toMonth);
   
   @GET
   @Path("/addExtraAmount")
   @Produces(MediaType.APPLICATION_XML)
   @Consumes(MediaType.APPLICATION_XML)
-  public void addExtraAmount(@QueryParam("amount") double amount,Date month);
+  public void addExtraAmount(@QueryParam("amount") double amount,@QueryParam("month") int month,String description);
   
   
 

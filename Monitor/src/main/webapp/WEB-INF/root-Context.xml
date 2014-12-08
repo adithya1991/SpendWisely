@@ -34,6 +34,7 @@
    </jaxrs:providers>
    <jaxrs:serviceBeans>
    <ref bean="MonthlySpending"/>
+   <ref bean="WeeklySpending"/>
    </jaxrs:serviceBeans>
    
    
