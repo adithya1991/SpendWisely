@@ -40,5 +40,6 @@
    
    
    
-   </jaxrs:server>    
+   </jaxrs:server> 
+   <import resource="/WEB-INF/context.xml"/>   
 </beans>   

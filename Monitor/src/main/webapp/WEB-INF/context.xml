@@ -1,0 +1,69 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+  <!-- 1. Common settings -->
+
+<!-- Tenant Aware Datasource -->
+ <jee:jndi-lookup jndi-name="java:jboss/datasources/FomDS"
+    id="dataSource" expected-type="javax.sql.DataSource" />
+
+  <!-- Use @Transactional() spring annotations to manage transactions  -->
+  <tx:annotation-driven />
+  
+  <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+
+  <!-- 2. Read-Write transaction manager specific settings -->
+  
+  <!-- Use JTA transactions with the container-deployed EntityManager -->
+  <!-- Note that primary="true" will make Spring's @Transactional use the following transaction manager by default-->
+  <bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager" primary="true" >
+  </bean>
+  
+  <bean id="pum" class="org.springframework.data.jpa.support.MergingPersistenceUnitManager">
+    <property name="persistenceXmlLocations">
+      <list>
+				<!--value>classpath:/META-INF/persistence/default/persistence.xml</value-->
+        <value>/WEB-INF/persistence.xml</value>
+      </list>
+    </property>
+    <property name="defaultDataSource" ref="dataSource"/>
+  </bean>
+
+  <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <property name="persistenceUnitManager" ref="pum"/>
+    <property name="persistenceUnitName" value="default"/>
+    <property name="jpaVendorAdapter">
+      <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="generateDdl" value="false" />
+        <property name="showSql" value="false" />
+        <property name="databasePlatform" value="org.hibernate.dialect.Oracle10gDialect" />
+      </bean>
+    </property>
+    <property name="jpaProperties">
+      <props>
+        <!-- 1. Sessions & Connections -->
+        <prop key="hibernate.connection.release_mode">auto</prop>
+        <prop key="hibernate.current_session_context_class">jta</prop>
+        <prop key="hibernate.transaction.auto_close_session">true</prop>
+        <!-- 2. Transactions -->
+        <prop key="javax.persistence.transactionType">jta</prop>
+        <prop key="hibernate.transaction.jta.platform">org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform</prop>
+        <!-- 3. Cache -->
+        <prop key="hibernate.cache.use_minimal_puts">true</prop>
+        <prop key="hibernate.cache.use_structured_entries">true</prop>
+        <!-- 4. Time-outs -->
+        <prop key="javax.persistence.lock.timeout">7000</prop>
+        <prop key="javax.persistence.query.timeout">120000</prop>
+        <!-- 5. Logging-->
+        <prop key="hibernate.format_sql">false</prop>
+        <prop key="hibernate.use_sql_comments">true</prop>
+      </props>
+    </property>
+  </bean>
+
+
+</beans>

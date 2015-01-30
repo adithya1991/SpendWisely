@@ -52,6 +52,13 @@
 	<version>${spring.version}</version>
 </dependency>
 
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-orm</artifactId>
+	<version>${spring.version}</version>
+</dependency>
+
+
     <!-- Apache cxf dependencies -->
     
     <dependency>
@@ -103,12 +110,12 @@
 </dependency>
 
 <dependency>
-	<groupId>org.hibernate</groupId>
-	<artifactId>hibernate-commons-annotations</artifactId>
-	<version>3.2.0.Final</version>
-</dependency>
-
-    
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>4.3.5.Final</version>
+        </dependency>
+        
+            
     
    
   </dependencies>
