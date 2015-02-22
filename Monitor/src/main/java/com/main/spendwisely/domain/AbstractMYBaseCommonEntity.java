@@ -3,25 +3,26 @@ package com.main.spendwisely.domain;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.MappedSuperclass;
 
 
 // This entity will have the common data associated with other entities
-@Embeddable
-public class AbstractWMBaseCommonEntity {
-	@Column(columnDefinition="NUMBER(1,0)",name="WEEK_NO")
+@MappedSuperclass
+public class AbstractMYBaseCommonEntity {
+	@Column(columnDefinition="NUMBER(1,0)",name="MONTH_NO")
 	@Basic
-	Integer weekNo;
+	Integer monthNo;
 	
 	@Column(columnDefinition="NUMBER(4,0)",name="YEAR_NO")
 	@Basic
 	Integer year;
 
 	public Integer getWeekNo() {
-		return weekNo;
+		return monthNo;
 	}
 
 	public void setWeekNo(Integer weekNo) {
-		this.weekNo = weekNo;
+		this.monthNo = weekNo;
 	}
 
 	

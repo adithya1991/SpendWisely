@@ -3,10 +3,11 @@ package com.main.spendwisely.domain;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.MappedSuperclass;
 
 
 // This entity will have the common data associated with other entities
-@Embeddable
+@MappedSuperclass
 public class AbstractWMYBaseCommonEntity {
 	@Column(columnDefinition="NUMBER(1,0)",name="WEEK_NO")
 	@Basic

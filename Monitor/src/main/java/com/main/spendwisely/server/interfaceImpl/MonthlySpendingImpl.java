@@ -36,6 +36,12 @@ public class MonthlySpendingImpl implements MonthlySpending {
 		
 	}
 
+	@Override
+	public void addLimit(double amount, int fromMonth, int toMonth) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 }

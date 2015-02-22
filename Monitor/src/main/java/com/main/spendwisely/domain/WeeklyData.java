@@ -9,7 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class WeeklyData {
+public class WeeklyData extends AbstractWMYBaseCommonEntity{
 	
 	@Basic
 	@Id
@@ -17,18 +17,49 @@ public class WeeklyData {
 	@Column(name="SEQUENCE_ID",columnDefinition="NUMBER(10)")
 	private Integer sequenceId;
 	
-	@Embedded
-	private AbstractWMBaseCommonEntity abstractWMBaseCommonEntity;
-	
 	@Basic
 	@Column(name="USER_ID",columnDefinition="VARCHAR2(20)")
 	private String userId;
 	
-	@Column(name="EXPENSE",columnDefinition="NUMBER(10,2)")
+	@Column(name="AMOUNT_SPENT",columnDefinition="NUMBER(10,2)")
 	private double expense;
 	
 	@Column(name="DESCRIPTION",columnDefinition="VARCHAR2(50)")
 	@Basic
 	private String description;
+
+	public Integer getSequenceId() {
+		return sequenceId;
+	}
+
+	public void setSequenceId(Integer sequenceId) {
+		this.sequenceId = sequenceId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public double getExpense() {
+		return expense;
+	}
+
+	public void setExpense(double expense) {
+		this.expense = expense;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	
 
 }

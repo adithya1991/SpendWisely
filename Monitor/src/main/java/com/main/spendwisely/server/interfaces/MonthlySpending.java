@@ -16,11 +16,17 @@ import com.main.spendwisely.dto.MonthlyDto;
 
 @Path("Monthly")
 public interface MonthlySpending {
-  @GET
+  @POST
   @Path("/salary")
   @Produces(MediaType.APPLICATION_XML)
   @Consumes(MediaType.APPLICATION_XML)
   public void addAmount(@QueryParam("amount") double amount, @QueryParam("from") int fromMonth, @QueryParam("to") int toMonth);
+  
+  @POST
+  @Path("/salary/limit")
+  @Produces(MediaType.APPLICATION_XML)
+  @Consumes(MediaType.APPLICATION_XML)
+  public void addLimit(@QueryParam("limit") double amount, @QueryParam("from") int fromMonth, @QueryParam("to") int toMonth);
   
   @Path("/repeatedExpense")
   @POST
@@ -34,7 +40,7 @@ public interface MonthlySpending {
 	  @Produces(MediaType.APPLICATION_XML)
 	  public MonthlyDto retrieveExpenses(@QueryParam("fromMonth") int fromMonth,@QueryParam("toMonth") int toMonth);
   
-  @GET
+  @POST
   @Path("/addExtraAmount")
   @Produces(MediaType.APPLICATION_XML)
   @Consumes(MediaType.APPLICATION_XML)

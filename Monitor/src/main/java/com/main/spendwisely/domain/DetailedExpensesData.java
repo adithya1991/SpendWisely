@@ -17,15 +17,12 @@ import javax.persistence.TemporalType;
 
 
 @Entity(name="WEEKLY_DATA")
-public class DetailedExpensesData{
+public class DetailedExpensesData extends AbstractWMYBaseCommonEntity{
 	@Basic
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="SEQUENCE_ID",columnDefinition="NUMBER(10)")
 	private Integer sequenceId;
-	
-	@Embedded
-	private AbstractWMYBaseCommonEntity abstractWMYBaseCommonEntity;
 	
 	@Basic
 	@Column(name="USER_ID",columnDefinition="VARCHAR2(20)")
@@ -50,13 +47,6 @@ public class DetailedExpensesData{
 		this.sequenceId = sequenceId;
 	}
 
-	public AbstractWMYBaseCommonEntity getAbstractWMYBaseCommonEntity() {
-		return abstractWMYBaseCommonEntity;
-	}
-
-	public void setAbstractWMYBaseCommonEntity(AbstractWMYBaseCommonEntity abstractWMYBaseCommonEntity) {
-		this.abstractWMYBaseCommonEntity = abstractWMYBaseCommonEntity;
-	}
 
 	public String getUserId() {
 		return userId;
