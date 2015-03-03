@@ -4,9 +4,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
+import org.apache.cxf.configuration.security.AuthorizationPolicy;
 import org.hibernate.jpa.criteria.CriteriaBuilderImpl;
 import org.springframework.stereotype.Component;
 
@@ -36,8 +38,9 @@ public class WeeklyDaoImpl implements AbstractDao{
 		// For this purpose we will try to use jpa 2 criteria queries 
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<MonthlyData> criteriaMonthly = cb.createQuery(MonthlyData.class);
-		// Now we need to specify what the actual query is about 
-		
+		// Now we need to specify what the actual query is about
+		Predicate predicateUserId = 
+		criteriaMonthly.where(restrictions);
 		
 		
 	}
