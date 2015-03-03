@@ -17,11 +17,11 @@ public class AbstractMYBaseCommonEntity {
 	@Basic
 	Integer year;
 
-	public Integer getWeekNo() {
+	public Integer getMonthNo() {
 		return monthNo;
 	}
 
-	public void setWeekNo(Integer weekNo) {
+	public void setMonthNo(Integer weekNo) {
 		this.monthNo = weekNo;
 	}
 

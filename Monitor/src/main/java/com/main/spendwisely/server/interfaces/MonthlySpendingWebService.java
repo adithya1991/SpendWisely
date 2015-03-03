@@ -15,7 +15,7 @@ import com.main.spendwisely.dto.MonthlyDto;
 
 
 @Path("Monthly")
-public interface MonthlySpending {
+public interface MonthlySpendingWebService {
   @POST
   @Path("/salary")
   @Produces(MediaType.APPLICATION_XML)

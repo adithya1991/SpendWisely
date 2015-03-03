@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import com.main.spendwisely.dto.ErrorCodesType;
 import com.main.spendwisely.dto.MonthlyDto;
 import com.main.spendwisely.dto.SpendWiselyException;
-import com.main.spendwisely.server.interfaces.MonthlySpending;
+import com.main.spendwisely.server.interfaces.MonthlySpendingWebService;
 
-@Service("MonthlySpending")
-public class MonthlySpendingImpl implements MonthlySpending {
+
+public class MonthlySpendingImpl implements MonthlySpendingWebService {
 
 	@Override
 	public void addAmount(double amount, int fromMonth, int toMonth) {

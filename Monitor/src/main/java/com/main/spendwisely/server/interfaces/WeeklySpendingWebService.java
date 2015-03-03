@@ -14,13 +14,13 @@ import javax.ws.rs.core.MediaType;
 import com.main.spendwisely.dto.WeeklyListDto;
 
 @Path("Weekly")
-public interface WeeklySpending {
+public interface WeeklySpendingWebService {
 	
 	@Path("/storeExpense")
 	  @POST
 	  @Consumes(MediaType.APPLICATION_XML)
 	  @Produces(MediaType.APPLICATION_XML)
-	  public void storeExpense(@QueryParam("amount") double amount,@QueryParam("month") int month,String description);
+	  public void storeExpense(@QueryParam("amount") double amount,@QueryParam("month") int month,@QueryParam("week") int week,@QueryParam("year") int year,String description);
 	
 	@Path("/retrieveExpenses")
 	@GET
