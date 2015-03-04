@@ -2,14 +2,14 @@ package com.main.spendwisely.dao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
-import org.apache.cxf.configuration.security.AuthorizationPolicy;
-import org.hibernate.jpa.criteria.CriteriaBuilderImpl;
 import org.springframework.stereotype.Component;
 
 import com.main.spendwisely.domain.MonthlyData;
@@ -39,8 +39,17 @@ public class WeeklyDaoImpl implements AbstractDao{
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<MonthlyData> criteriaMonthly = cb.createQuery(MonthlyData.class);
 		// Now we need to specify what the actual query is about
-		Predicate predicateUserId = 
-		criteriaMonthly.where(restrictions);
+		Root<MonthlyData> monthlyRoot = criteriaMonthly.from(MonthlyData.class);
+		criteriaMonthly.select(monthlyRoot);
+		Predicate userName = cb.equal(monthlyRoot.get("userId"),"bleh");
+		Predicate monthPred = cb.equal(monthlyRoot.get("monthNo"),month);
+		Predicate yearPred = cb.equal(monthlyRoot.get("year"),year);
+		criteriaMonthly.where(userName,monthPred,yearPred);
+		TypedQuery<MonthlyData> ty = entityManager.createQuery(criteriaMonthly);
+		MonthlyData mon = ty.getSingleResult();
+		// Now we have the specific month , we need to add the expense and store it 
+		mon.setExpense(mon.getExpense() + amount);
+		// Hibernate will automatically persist it at the end of the transaction 
 		
 		
 	}

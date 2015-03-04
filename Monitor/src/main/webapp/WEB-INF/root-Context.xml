@@ -33,8 +33,8 @@
    
    </jaxrs:providers>
    <jaxrs:serviceBeans>
-   <ref bean="MonthlySpending"/>
-   <ref bean="WeeklySpending"/>
+   <ref bean="MonthlySpendingWebService"/>
+   <ref bean="WeeklySpendingWebService"/>
    </jaxrs:serviceBeans>
    
    
