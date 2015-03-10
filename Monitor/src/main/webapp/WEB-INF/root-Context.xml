@@ -12,8 +12,9 @@
       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd 
       http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd">
       
-      
-       
+      <bean id ="MonthlySpendingWebService" class="com.main.spendwisely.server.interfaceImpl.MonthlySpendingImpl"/>
+      <bean id ="WeeklySpendingWebService" class="com.main.spendwisely.server.interfaceImpl.WeeklySpendingImpl"/>
+        
  <import resource="classpath:META-INF/cxf/cxf.xml" />
    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" /> 
    
@@ -41,5 +42,5 @@
    
    
    </jaxrs:server> 
-   <import resource="/WEB-INF/context.xml"/>   
+   <import resource="context.xml"/>   
 </beans>   

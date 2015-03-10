@@ -7,8 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="WEEKLY_DATA")
 public class WeeklyData extends AbstractWMYBaseCommonEntity{
 	
 	@Basic

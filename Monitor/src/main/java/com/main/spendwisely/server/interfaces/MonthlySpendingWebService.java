@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import com.main.spendwisely.dto.MonthlyDto;
 
 
-@Path("Monthly")
+@Path("/Monthly")
 public interface MonthlySpendingWebService {
   @POST
   @Path("/salary")

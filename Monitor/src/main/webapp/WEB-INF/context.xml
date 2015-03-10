@@ -23,18 +23,10 @@
   <bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager" primary="true" >
   </bean>
   
-  <bean id="pum" class="org.springframework.data.jpa.support.MergingPersistenceUnitManager">
-    <property name="persistenceXmlLocations">
-      <list>
-				<!--value>classpath:/META-INF/persistence/default/persistence.xml</value-->
-        <value>/WEB-INF/persistence.xml</value>
-      </list>
-    </property>
-    <property name="defaultDataSource" ref="dataSource"/>
-  </bean>
 
   <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-    <property name="persistenceUnitManager" ref="pum"/>
+  	<property name="persistenceXmlLocation" value = "/WEB-INF/persistence.xml" />
+  	<property name="dataSource" ref="dataSource"/>
     <property name="persistenceUnitName" value="default"/>
     <property name="jpaVendorAdapter">
       <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">

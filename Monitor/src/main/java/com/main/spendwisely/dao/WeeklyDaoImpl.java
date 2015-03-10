@@ -10,18 +10,17 @@ import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.main.spendwisely.domain.MonthlyData;
 import com.main.spendwisely.domain.WeeklyData;
 
-@Component
-public class WeeklyDaoImpl implements AbstractDao{
+@Service
+public class WeeklyDaoImpl implements WeeklyDao{
 	
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	@Override
 	@Transactional(value=TxType.REQUIRES_NEW,rollbackOn = Exception.class)
 	public void storeWeeklyExpense(double amount, String description, int week,
 			int month,int year) {

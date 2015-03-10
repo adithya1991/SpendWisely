@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.main.spendwisely.dto.WeeklyListDto;
 
-@Path("Weekly")
+@Path("/Weekly")
 public interface WeeklySpendingWebService {
 	
 	@Path("/storeExpense")

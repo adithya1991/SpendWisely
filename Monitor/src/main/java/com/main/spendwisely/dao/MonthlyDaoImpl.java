@@ -1,17 +1,11 @@
 package com.main.spendwisely.dao;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
-public class MonthlyDaoImpl implements AbstractDao{
+@Service
+public class MonthlyDaoImpl implements MonthlyDao{
 
-	@Override
-	public void storeWeeklyExpense(double amount, String description, int week,
-			int month,int year) {
-		
-		
-	}
-
+	
 	
 	
 }

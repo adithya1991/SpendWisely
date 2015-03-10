@@ -3,6 +3,7 @@
   xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
   version="2.0">
   <persistence-unit name="default">
-    
+    <class>com.main.spendwisely.domain.MonthlyData</class>
+    <class>com.main.spendwisely.domain.WeeklyData</class>
   </persistence-unit>
 </persistence>
