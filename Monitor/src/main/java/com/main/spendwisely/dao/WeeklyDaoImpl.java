@@ -8,7 +8,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.transaction.Transactional.TxType;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -33,61 +32,84 @@ public class WeeklyDaoImpl implements WeeklyDao,ApplicationContextAware {
 			int month,int year) {
 		
 		// Here we need to check whether we need an update or a create 
-		WeeklyData create = checkIfCreateFlow(amount,week,month,year);
+		WeeklyData existingWeeklyData = checkIfCreateFlow(amount,week,month,year);
 		
-		// If create then we create a new weeklydata and persist it , else we will update the retrieved Entity
+		// If null then we create a new weeklydata and persist it , else we will update the retrieved Entity
+		if(existingWeeklyData == null)
+		{
+			createNewWeeklyData(amount,description,week,month,year);
+		}
+		else
+		{
+			updateExistingWeeklyData(existingWeeklyData,amount);
+		}
 		
-		
-		
-		
-		
-		
-		
-		// here we need to persist the given entity 
-		WeeklyData weeklyData = new WeeklyData();
-		weeklyData.setDescription(description);
-		weeklyData.setExpense(amount);
-		weeklyData.setMonthNo(month);
-		weeklyData.setWeekNo(week);
-		weeklyData.setYear(year);
-		weeklyData.setUserId("bleh");
-		entityManager.persist(weeklyData);
 		
 		// Also we need to get the correspnding month and update details 
-		// For this purpose we will try to use jpa 2 criteria queries 
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<MonthlyData> criteriaMonthly = cb.createQuery(MonthlyData.class);
-		// Now we need to specify what the actual query is about
-		Root<MonthlyData> monthlyRoot = criteriaMonthly.from(MonthlyData.class);
-		criteriaMonthly.select(monthlyRoot);
-		Predicate userName = cb.equal(monthlyRoot.get("userId"),"bleh");
-		Predicate monthPred = cb.equal(monthlyRoot.get("monthNo"),month);
-		Predicate yearPred = cb.equal(monthlyRoot.get("year"),year);
-		criteriaMonthly.where(userName,monthPred,yearPred);
-		TypedQuery<MonthlyData> ty = entityManager.createQuery(criteriaMonthly);
-		MonthlyData mon = null;
-		try
-		{
-		mon = ty.getSingleResult();
-		}
-		catch(NoResultException nr)
-		{
-			// This is the case where we got to create a month for the very first time
-			MonthlyData monthly = new MonthlyData();
-			monthly.setYear(year);
-			monthly.setExpense(amount);
-			monthly.setMonthNo(month);
-			monthly.setUserId("bleh");
-			entityManager.persist(monthly);
-			return;
-		}
-		// Now we have the specific month , we need to add the expense and store it 
-		mon.setExpense(mon.getExpense() + amount);
-		// Hibernate will automatically persist it at the end of the transaction 
+		updateCorrespondingMonthlyData(amount,week,month,year);
 		
 	}
 	
 	
+	
+	
+	
+	@Transactional(propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
+	private void updateCorrespondingMonthlyData(double amount, int week, int month, int year) {
+		// For this purpose we will try to use jpa 2 criteria queries 
+				CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+				CriteriaQuery<MonthlyData> criteriaMonthly = cb.createQuery(MonthlyData.class);
+				// Now we need to specify what the actual query is about
+				Root<MonthlyData> monthlyRoot = criteriaMonthly.from(MonthlyData.class);
+				criteriaMonthly.select(monthlyRoot);
+				Predicate userName = cb.equal(monthlyRoot.get("userId"),"bleh");
+				Predicate monthPred = cb.equal(monthlyRoot.get("monthNo"),month);
+				Predicate yearPred = cb.equal(monthlyRoot.get("year"),year);
+				criteriaMonthly.where(userName,monthPred,yearPred);
+				TypedQuery<MonthlyData> ty = entityManager.createQuery(criteriaMonthly);
+				MonthlyData mon = null;
+				try
+				{
+				mon = ty.getSingleResult();
+				}
+				catch(NoResultException nr)
+				{
+					// This is the case where we got to create a month for the very first time
+					MonthlyData monthly = new MonthlyData();
+					monthly.setYear(year);
+					monthly.setExpense(amount);
+					monthly.setMonthNo(month);
+					monthly.setUserId("bleh");
+					entityManager.persist(monthly);
+					return;
+				}
+				// Now we have the specific month , we need to add the expense and store it 
+				mon.setExpense(mon.getExpense() + amount);
+				// Hibernate will automatically persist it at the end of the transaction 
+		
+	}
+	@Transactional(propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
+	private void updateExistingWeeklyData(WeeklyData existingWeeklyData,double amount) {
+		existingWeeklyData.setExpense(existingWeeklyData.getExpense() + amount);
+		
+	}
+
+	@Transactional(propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
+	private void createNewWeeklyData(double amount, String description,
+			int week, int month, int year) {
+		// here we need to persist the given entity 
+				WeeklyData weeklyData = new WeeklyData();
+				weeklyData.setDescription(description);
+				weeklyData.setExpense(amount);
+				weeklyData.setMonthNo(month);
+				weeklyData.setWeekNo(week);
+				weeklyData.setYear(year);
+				weeklyData.setUserId("bleh");
+				entityManager.persist(weeklyData);
+		
+	}
+
+
 	@Transactional(propagation=Propagation.REQUIRED,rollbackFor = Exception.class)
 	private WeeklyData checkIfCreateFlow(double amount, int week, int month,
 			int year) {
@@ -107,7 +129,7 @@ public class WeeklyDaoImpl implements WeeklyDao,ApplicationContextAware {
 		}
 		catch(NoResultException nr)
 		{
-			return weekRes;
+			// Do nothing as we will return anyways
 		}
 		return weekRes;
 	}
