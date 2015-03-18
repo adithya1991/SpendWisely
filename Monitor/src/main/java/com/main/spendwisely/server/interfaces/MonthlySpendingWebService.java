@@ -11,28 +11,34 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 
+
+
+
+
 import com.main.spendwisely.dto.MonthlyDto;
+import com.main.spendwisely.dto.SpendWiselyResponse;
 
 
 @Path("/Monthly")
 public interface MonthlySpendingWebService {
   @POST
-  @Path("/salary")
+  @Path("/addSalary")
   @Produces(MediaType.APPLICATION_XML)
   @Consumes(MediaType.APPLICATION_XML)
-  public void addAmount(@QueryParam("amount") double amount, @QueryParam("from") int fromMonth, @QueryParam("to") int toMonth);
+  public SpendWiselyResponse<Object> addAmount(@QueryParam("amount") double amount, @QueryParam("fromMonth") int fromMonth, @QueryParam("toMonth") int toMonth,
+		  @QueryParam("fromYear") int fromYear, @QueryParam("toYear") int toYear);
   
   @POST
   @Path("/salary/limit")
   @Produces(MediaType.APPLICATION_XML)
   @Consumes(MediaType.APPLICATION_XML)
-  public void addLimit(@QueryParam("limit") double amount, @QueryParam("from") int fromMonth, @QueryParam("to") int toMonth);
+  public SpendWiselyResponse<Object> addLimit(@QueryParam("limit") double amount, @QueryParam("from") int fromMonth, @QueryParam("to") int toMonth);
   
   @Path("/repeatedExpense")
   @POST
   @Consumes(MediaType.APPLICATION_XML)
   @Produces(MediaType.APPLICATION_XML)
-  public void repeatedExpense(@QueryParam("amount") double amount,@QueryParam("from") int fromMonth, @QueryParam("to") int toMonth,String description);
+  public SpendWiselyResponse<Object> repeatedExpense(@QueryParam("amount") double amount,@QueryParam("from") int fromMonth, @QueryParam("to") int toMonth,String description);
   
   @Path("/retrieveExpenses")
 	@GET
@@ -44,7 +50,7 @@ public interface MonthlySpendingWebService {
   @Path("/addExtraAmount")
   @Produces(MediaType.APPLICATION_XML)
   @Consumes(MediaType.APPLICATION_XML)
-  public void addExtraAmount(@QueryParam("amount") double amount,@QueryParam("month") int month,String description);
+  public SpendWiselyResponse<Object> addExtraAmount(@QueryParam("amount") double amount,@QueryParam("month") int month,String description);
   
   
 

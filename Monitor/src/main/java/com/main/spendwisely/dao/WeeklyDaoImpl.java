@@ -10,8 +10,10 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,11 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.main.spendwisely.domain.MonthlyData;
 import com.main.spendwisely.domain.WeeklyData;
 
-@Service
+@Repository
 public class WeeklyDaoImpl implements WeeklyDao,ApplicationContextAware {
 	
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Autowired
+	private MonthlyDao monthlyDao;
 	
 	private ApplicationContext applicationContext;
 	
@@ -31,19 +36,7 @@ public class WeeklyDaoImpl implements WeeklyDao,ApplicationContextAware {
 	public void storeWeeklyExpense(double amount, String description, int week,
 			int month,int year) {
 		
-		// Here we need to check whether we need an update or a create 
-		WeeklyData existingWeeklyData = checkIfCreateFlow(amount,week,month,year);
-		
-		// If null then we create a new weeklydata and persist it , else we will update the retrieved Entity
-		if(existingWeeklyData == null)
-		{
-			createNewWeeklyData(amount,description,week,month,year);
-		}
-		else
-		{
-			updateExistingWeeklyData(existingWeeklyData,amount);
-		}
-		
+		createNewWeeklyData(amount,description,week,month,year);
 		
 		// Also we need to get the correspnding month and update details 
 		updateCorrespondingMonthlyData(amount,week,month,year);
@@ -57,37 +50,28 @@ public class WeeklyDaoImpl implements WeeklyDao,ApplicationContextAware {
 	@Transactional(propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
 	private void updateCorrespondingMonthlyData(double amount, int week, int month, int year) {
 		// For this purpose we will try to use jpa 2 criteria queries 
-				CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-				CriteriaQuery<MonthlyData> criteriaMonthly = cb.createQuery(MonthlyData.class);
-				// Now we need to specify what the actual query is about
-				Root<MonthlyData> monthlyRoot = criteriaMonthly.from(MonthlyData.class);
-				criteriaMonthly.select(monthlyRoot);
-				Predicate userName = cb.equal(monthlyRoot.get("userId"),"bleh");
-				Predicate monthPred = cb.equal(monthlyRoot.get("monthNo"),month);
-				Predicate yearPred = cb.equal(monthlyRoot.get("year"),year);
-				criteriaMonthly.where(userName,monthPred,yearPred);
-				TypedQuery<MonthlyData> ty = entityManager.createQuery(criteriaMonthly);
-				MonthlyData mon = null;
-				try
-				{
-				mon = ty.getSingleResult();
-				}
-				catch(NoResultException nr)
-				{
+					MonthlyData monthlyData = monthlyDao.checkIfMonthRecExists(month, year);
 					// This is the case where we got to create a month for the very first time
-					MonthlyData monthly = new MonthlyData();
-					monthly.setYear(year);
-					monthly.setExpense(amount);
-					monthly.setMonthNo(month);
-					monthly.setUserId("bleh");
-					entityManager.persist(monthly);
+					if(monthlyData == null)
+					{
+						monthlyData = monthlyDao.addNewMonthlyRecord(year, amount, month);
+						monthlyData.setSaving(monthlyData.getSalary() - monthlyData.getExpense());
 					return;
+					}
+					else
+					{
+						// Now we have the specific month , we need to add the expense and store it 
+						monthlyData.setExpense(monthlyData.getExpense() + amount);
+						// We also compute saving 
+						if(monthlyData.getSalary() != 0)
+						{
+							monthlyData.setSaving(monthlyData.getSalary() - monthlyData.getExpense());
+						}
+						// Hibernate will automatically persist it at the end of the transaction
+						
+					}
 				}
-				// Now we have the specific month , we need to add the expense and store it 
-				mon.setExpense(mon.getExpense() + amount);
-				// Hibernate will automatically persist it at the end of the transaction 
-		
-	}
+				
 	@Transactional(propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
 	private void updateExistingWeeklyData(WeeklyData existingWeeklyData,double amount) {
 		existingWeeklyData.setExpense(existingWeeklyData.getExpense() + amount);

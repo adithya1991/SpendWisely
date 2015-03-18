@@ -28,6 +28,30 @@ public class MonthlyData extends AbstractMYBaseCommonEntity{
 	@Column(name="SALARY",columnDefinition="NUMBER(10,2)")
 	@Basic
 	private double salary;
+	
+	@Column(name="SAVING",columnDefinition="NUMBER(10,2)")
+	@Basic
+	private double saving;
+	
+	@Column(name="LIMIT",columnDefinition="NUMBER(10,2)")
+	@Basic
+	private double limit;
+
+	public double getSaving() {
+		return saving;
+	}
+
+	public void setSaving(double saving) {
+		this.saving = saving;
+	}
+
+	public double getLimit() {
+		return limit;
+	}
+
+	public void setLimit(double limit) {
+		this.limit = limit;
+	}
 
 	public Integer getSequenceId() {
 		return sequenceId;
