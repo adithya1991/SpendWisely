@@ -37,7 +37,7 @@ public class DetailedExpensesData extends AbstractWMYBaseCommonEntity{
 	@Basic
 	private String description;
 	
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="LAST_UPDATED",columnDefinition="datetime")
 	private Date lastUpdateDateTime;
 

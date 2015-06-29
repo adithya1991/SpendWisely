@@ -38,13 +38,13 @@ public class MonthlyDaoImpl implements MonthlyDao,ApplicationContextAware{
 			for(int month = fromMonth ; month <= toMonth ; month ++)
 			{
 				// Check if record already exists for a particular month 
-				MonthlyData monthlyData = checkIfMonthRecExists(month, year);
+				MonthlyData monthlyData = getThisProxy(MonthlyDao.class).checkIfMonthRecExists(month, year);
 				if(monthlyData == null)
 				{
 					// We need to create it for the first time
-					monthlyData =  addNewMonthlyRecord(year, 0, month);
+					monthlyData =  getThisProxy(MonthlyDao.class).addNewMonthlyRecord(year, 0, month);
 				}
-				monthlyData.setSalary(amount);
+				monthlyData.setSalary(monthlyData.getSalary() + amount);
 				monthlyData.setSaving(monthlyData.getSalary() - monthlyData.getExpense());
 			}
 		}
@@ -53,7 +53,7 @@ public class MonthlyDaoImpl implements MonthlyDao,ApplicationContextAware{
 	}
 	
 	@Override
-	@Transactional(propagation = Propagation.MANDATORY,rollbackFor=Exception.class)
+	@Transactional(propagation = Propagation.REQUIRED,rollbackFor=Exception.class)
 	public  MonthlyData checkIfMonthRecExists(int month,int year)
 	{
 	CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -79,7 +79,7 @@ public class MonthlyDaoImpl implements MonthlyDao,ApplicationContextAware{
 	}
 	
 	@Override
-	@Transactional(propagation = Propagation.MANDATORY,rollbackFor=Exception.class)
+	@Transactional(propagation = Propagation.REQUIRED,rollbackFor=Exception.class)
 	public MonthlyData addNewMonthlyRecord(int year,double amount,int month )
 	{
 		MonthlyData monthly = new MonthlyData();
@@ -98,6 +98,11 @@ public class MonthlyDaoImpl implements MonthlyDao,ApplicationContextAware{
 		this.applicationContext = applicationContext;
 	}
 	
+	
+	public <T> T getThisProxy(Class<T> clazz)
+	{
+		return this.applicationContext.getBean(clazz);
+	}
 	
 	
 }

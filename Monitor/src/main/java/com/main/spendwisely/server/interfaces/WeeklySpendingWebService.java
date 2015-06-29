@@ -22,7 +22,7 @@ public interface WeeklySpendingWebService {
 	  @POST
 	  @Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	  @Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	  public SpendWiselyResponse<Object> storeExpense(@QueryParam("amount") double amount,@QueryParam("month") int month,@QueryParam("week") int week,@QueryParam("year") int year,String description);
+	  public SpendWiselyResponse<Void> storeExpense(@QueryParam("amount") double amount,@QueryParam("month") int month,@QueryParam("week") int week,@QueryParam("year") int year,String description);
 	
 	@Path("/retrieveExpenses")
 	@GET

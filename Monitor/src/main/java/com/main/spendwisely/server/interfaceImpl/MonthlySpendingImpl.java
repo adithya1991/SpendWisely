@@ -23,9 +23,9 @@ public class MonthlySpendingImpl implements MonthlySpendingWebService {
 	private MonthlyService monthlyService;
 
 	@Override
-	public SpendWiselyResponse<Object> addAmount(double amount, int fromMonth, int toMonth,int fromYear,int toYear) {
+	public SpendWiselyResponse<Void> addAmount(double amount, int fromMonth, int toMonth,int fromYear,int toYear) {
 		// TODO Auto-generated method stub
-		SpendWiselyResponse<Object> spendWiselyResponse = new SpendWiselyResponse<Object>();
+		SpendWiselyResponse<Void> spendWiselyResponse = new SpendWiselyResponse<Void>();
 		try
 		{
 			monthlyService.addSalary(amount, fromMonth, toMonth,fromYear,toYear);
@@ -50,12 +50,6 @@ public class MonthlySpendingImpl implements MonthlySpendingWebService {
 
 	@Override
 	public MonthlyDto retrieveExpenses(int fromMonth, int toMonth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SpendWiselyResponse<Object> addExtraAmount(double amount, int month, String description) {
 		// TODO Auto-generated method stub
 		return null;
 	}

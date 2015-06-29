@@ -19,10 +19,10 @@ public class WeeklySpendingImpl implements WeeklySpendingWebService{
 	private WeeklyService weeklyService;
 	
 	@Override
-	public SpendWiselyResponse<Object> storeExpense(double amount, int month,int week,int year, String description) {
+	public SpendWiselyResponse<Void> storeExpense(double amount, int month,int week,int year, String description) {
 		// now we need to store all these details into the week table
 		// and add it to the current total of the month as well 
-		SpendWiselyResponse<Object> spendWiselyResponse = new SpendWiselyResponse<Object>();
+		SpendWiselyResponse<Void> spendWiselyResponse = new SpendWiselyResponse<Void>();
 		
 		try
 		{
@@ -44,7 +44,6 @@ public class WeeklySpendingImpl implements WeeklySpendingWebService{
 	@Override
 	public WeeklyListDto retrieveExpenses(int fromWeek,int toWeek,int fromMonth, int toMonth) {
 		
-		return null;
 	}
 
 	

@@ -1,5 +1,8 @@
 package com.main.spendwisely.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -14,10 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.main.spendwisely.domain.DetailedExpensesData;
 import com.main.spendwisely.domain.MonthlyData;
 import com.main.spendwisely.domain.WeeklyData;
 
@@ -35,27 +38,58 @@ public class WeeklyDaoImpl implements WeeklyDao,ApplicationContextAware {
 	@Transactional(propagation=Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
 	public void storeWeeklyExpense(double amount, String description, int week,
 			int month,int year) {
+		// add a detailed expenses entity for transaction history
 		
-		createNewWeeklyData(amount,description,week,month,year);
+		addDetailedExpenseEntity(amount,description,week,
+				month,year);
 		
+		WeeklyData weekData = getThisProxy(WeeklyDao.class).checkIfCreateFlow(amount, week, month, year);
+		if(weekData == null)
+		{
+		getThisProxy(WeeklyDao.class).createNewWeeklyData(amount,description,week,month,year);
+		}
+		else
+		{
+			// Add the expense to the existing week data 
+			weekData.setExpense(weekData.getExpense() + amount);
+		}
 		// Also we need to get the correspnding month and update details 
-		updateCorrespondingMonthlyData(amount,week,month,year);
+		getThisProxy(WeeklyDao.class).updateCorrespondingMonthlyData(amount,week,month,year);
 		
 	}
 	
-	
-	
-	
-	
+
+
+
+
 	@Transactional(propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
-	private void updateCorrespondingMonthlyData(double amount, int week, int month, int year) {
+	public void addDetailedExpenseEntity(double amount, String description,
+			int week, int month, int year) {
+		// TODO Auto-generated method stub
+		DetailedExpensesData detailedExpensesData = new DetailedExpensesData();
+		detailedExpensesData.setDescription(description);
+		detailedExpensesData.setExpense(amount);
+		detailedExpensesData.setMonthNo(month);
+		detailedExpensesData.setUserId("bleh");
+		detailedExpensesData.setWeekNo(week);
+		detailedExpensesData.setYear(year);
+		entityManager.persist(detailedExpensesData);
+	}
+
+
+
+
+
+
+	@Transactional(propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
+	public void updateCorrespondingMonthlyData(double amount, int week, int month, int year) {
 		// For this purpose we will try to use jpa 2 criteria queries 
 					MonthlyData monthlyData = monthlyDao.checkIfMonthRecExists(month, year);
 					// This is the case where we got to create a month for the very first time
 					if(monthlyData == null)
 					{
 						monthlyData = monthlyDao.addNewMonthlyRecord(year, amount, month);
-						monthlyData.setSaving(monthlyData.getSalary() - monthlyData.getExpense());
+						//monthlyData.setSaving(monthlyData.getSalary() - monthlyData.getExpense());
 					return;
 					}
 					else
@@ -72,14 +106,10 @@ public class WeeklyDaoImpl implements WeeklyDao,ApplicationContextAware {
 					}
 				}
 				
-	@Transactional(propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
-	private void updateExistingWeeklyData(WeeklyData existingWeeklyData,double amount) {
-		existingWeeklyData.setExpense(existingWeeklyData.getExpense() + amount);
-		
-	}
+
 
 	@Transactional(propagation=Propagation.REQUIRED,rollbackFor=Exception.class)
-	private void createNewWeeklyData(double amount, String description,
+	public void createNewWeeklyData(double amount, String description,
 			int week, int month, int year) {
 		// here we need to persist the given entity 
 				WeeklyData weeklyData = new WeeklyData();
@@ -95,7 +125,7 @@ public class WeeklyDaoImpl implements WeeklyDao,ApplicationContextAware {
 
 
 	@Transactional(propagation=Propagation.REQUIRED,rollbackFor = Exception.class)
-	private WeeklyData checkIfCreateFlow(double amount, int week, int month,
+	public WeeklyData checkIfCreateFlow(double amount, int week, int month,
 			int year) {
 		CriteriaBuilder checkingCriteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<WeeklyData> weeklyCriteriaCheck = checkingCriteriaBuilder.createQuery(WeeklyData.class);
@@ -122,6 +152,41 @@ public class WeeklyDaoImpl implements WeeklyDao,ApplicationContextAware {
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {
 		this.applicationContext = applicationContext;
+		
+	}
+
+	public <T> T  getThisProxy(Class<T> clazz)
+	{
+		return this.applicationContext.getBean(clazz);
+	}
+
+
+
+
+
+	@Override
+	public List<WeeklyData> retrieveAllExpenses(int fromWeek,int toWeek,int fromMonth, int toMonth) {
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<WeeklyData> criteriaQuery = cb.createQuery(WeeklyData.class);
+		
+		Root<WeeklyData> root = criteriaQuery.from(WeeklyData.class);
+		Predicate weekFrom = cb.greaterThanOrEqualTo(root.<Integer> get("weekNo"),fromWeek);
+		Predicate weekTo = cb.lessThanOrEqualTo(root.<Integer> get("weekNo"),toWeek);
+		Predicate monthName = cb.greaterThanOrEqualTo(root.<Integer> get("monthNo"),fromMonth);
+		Predicate monthTo = cb.lessThanOrEqualTo(root.<Integer> get("monthNo"),toMonth);
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		predicates.add(weekFrom);
+		predicates.add(weekTo);
+		predicates.add(monthName);
+		predicates.add(monthTo);
+		Predicate[] predicateArray = new Predicate[predicates.size()];
+		predicates.toArray(predicateArray);
+		criteriaQuery.where(predicateArray);
+		criteriaQuery.select(root);
+		TypedQuery<WeeklyData> weeklyData = entityManager.createQuery(criteriaQuery);
+		List<WeeklyData> weekDatas = weeklyData.getResultList();
+		return weekDatas;
+		
 		
 	}
 

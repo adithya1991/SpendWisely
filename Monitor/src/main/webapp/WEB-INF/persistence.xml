@@ -5,5 +5,7 @@
   <persistence-unit name="default">
     <class>com.main.spendwisely.domain.MonthlyData</class>
     <class>com.main.spendwisely.domain.WeeklyData</class>
+    <class>com.main.spendwisely.domain.DetailedExpensesData</class>
+    <class>com.main.spendwisely.domain.RepeatativeEntries</class>
   </persistence-unit>
 </persistence>

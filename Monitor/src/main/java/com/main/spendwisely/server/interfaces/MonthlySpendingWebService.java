@@ -5,10 +5,12 @@ import java.util.Date;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
 
 
 
@@ -21,36 +23,31 @@ import com.main.spendwisely.dto.SpendWiselyResponse;
 
 @Path("/Monthly")
 public interface MonthlySpendingWebService {
-  @POST
+  @PUT
   @Path("/addSalary")
-  @Produces(MediaType.APPLICATION_XML)
-  @Consumes(MediaType.APPLICATION_XML)
-  public SpendWiselyResponse<Object> addAmount(@QueryParam("amount") double amount, @QueryParam("fromMonth") int fromMonth, @QueryParam("toMonth") int toMonth,
+  @Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
+  @Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
+  public SpendWiselyResponse<Void> addAmount(@QueryParam("amount") double amount, @QueryParam("fromMonth") int fromMonth, @QueryParam("toMonth") int toMonth,
 		  @QueryParam("fromYear") int fromYear, @QueryParam("toYear") int toYear);
   
   @POST
   @Path("/salary/limit")
-  @Produces(MediaType.APPLICATION_XML)
-  @Consumes(MediaType.APPLICATION_XML)
+  @Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
+  @Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
   public SpendWiselyResponse<Object> addLimit(@QueryParam("limit") double amount, @QueryParam("from") int fromMonth, @QueryParam("to") int toMonth);
   
   @Path("/repeatedExpense")
-  @POST
-  @Consumes(MediaType.APPLICATION_XML)
-  @Produces(MediaType.APPLICATION_XML)
+  @PUT
+  @Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
+  @Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
   public SpendWiselyResponse<Object> repeatedExpense(@QueryParam("amount") double amount,@QueryParam("from") int fromMonth, @QueryParam("to") int toMonth,String description);
   
   @Path("/retrieveExpenses")
 	@GET
-	@Consumes(MediaType.APPLICATION_XML)
-	  @Produces(MediaType.APPLICATION_XML)
+	@Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
+	  @Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	  public MonthlyDto retrieveExpenses(@QueryParam("fromMonth") int fromMonth,@QueryParam("toMonth") int toMonth);
   
-  @POST
-  @Path("/addExtraAmount")
-  @Produces(MediaType.APPLICATION_XML)
-  @Consumes(MediaType.APPLICATION_XML)
-  public SpendWiselyResponse<Object> addExtraAmount(@QueryParam("amount") double amount,@QueryParam("month") int month,String description);
   
   
 
