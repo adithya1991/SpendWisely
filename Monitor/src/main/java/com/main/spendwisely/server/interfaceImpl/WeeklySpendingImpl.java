@@ -1,10 +1,10 @@
 package com.main.spendwisely.server.interfaceImpl;
 
-import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import com.main.spendwisely.domain.WeeklyData;
 import com.main.spendwisely.dto.ErrorResponseType;
 import com.main.spendwisely.dto.ProcessingStatusType;
 import com.main.spendwisely.dto.SpendWiselyResponse;
@@ -43,7 +43,8 @@ public class WeeklySpendingImpl implements WeeklySpendingWebService{
 
 	@Override
 	public WeeklyListDto retrieveExpenses(int fromWeek,int toWeek,int fromMonth, int toMonth) {
-		
+		return weeklyService.getWeeklyExpense(fromWeek, toWeek, fromMonth, toMonth);
+	
 	}
 
 	

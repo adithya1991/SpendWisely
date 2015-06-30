@@ -1,5 +1,8 @@
 package com.main.spendwisely.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -99,10 +102,35 @@ public class MonthlyDaoImpl implements MonthlyDao,ApplicationContextAware{
 	}
 	
 	
+	
+
+	@Transactional(propagation=Propagation.REQUIRES_NEW,rollbackFor=Exception.class)
+	@Override
+	public List<MonthlyData> getExpenses(int fromMonth, int toMonth,
+			int fromYear, int toYear) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<MonthlyData> criteriaQuery = criteriaBuilder.createQuery(MonthlyData.class);
+		Root<MonthlyData> root = criteriaQuery.from(MonthlyData.class);
+		Predicate fromMonthPred = criteriaBuilder.greaterThanOrEqualTo(root.<Integer>get("monthNo"), fromMonth);
+		Predicate toMonthPred = criteriaBuilder.lessThanOrEqualTo(root.<Integer>get("monthNo"), toMonth);
+		Predicate fromYearPred = criteriaBuilder.greaterThanOrEqualTo(root.<Integer>get("year"), fromYear);
+		Predicate toYearPred = criteriaBuilder.lessThanOrEqualTo(root.<Integer>get("year"), toYear);
+		List<Predicate> predicateList = new ArrayList<Predicate>();
+		predicateList.add(fromMonthPred);
+		predicateList.add(toMonthPred);
+		predicateList.add(fromYearPred);
+		predicateList.add(toYearPred);
+		Predicate[] predicateArray = new Predicate[predicateList.size()];
+		predicateList.toArray(predicateArray);
+		criteriaQuery.where(predicateArray);
+		TypedQuery<MonthlyData> typedQuery = entityManager.createQuery(criteriaQuery);
+		return typedQuery.getResultList();
+			
+	}
+	
 	public <T> T getThisProxy(Class<T> clazz)
 	{
 		return this.applicationContext.getBean(clazz);
 	}
-	
 	
 }

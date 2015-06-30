@@ -1,9 +1,12 @@
 package com.main.spendwisely.dto;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="MonthlyData")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class MonthlyDto {
 
 	@XmlElement(name="month")
@@ -14,8 +17,18 @@ public class MonthlyDto {
 	double expense;
 	@XmlElement(name="limit")
 	double limit;
-	@XmlElement(name="savings")
-	double savings;
+	@XmlElement(name="saving")
+	double saving;
+	@XmlElement(name="salary")
+	double salary;
+	
+	
+	public double getSalary() {
+		return salary;
+	}
+	public void setSalary(double salary) {
+		this.salary = salary;
+	}
 	public Integer getMonthNo() {
 		return monthNo;
 	}
@@ -40,11 +53,11 @@ public class MonthlyDto {
 	public void setLimit(double limit) {
 		this.limit = limit;
 	}
-	public double getSavings() {
-		return savings;
+	public double getSaving() {
+		return saving;
 	}
-	public void setSavings(double savings) {
-		this.savings = savings;
+	public void setSaving(double saving) {
+		this.saving = saving;
 	}
 	
 	

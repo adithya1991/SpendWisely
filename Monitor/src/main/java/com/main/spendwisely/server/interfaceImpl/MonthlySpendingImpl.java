@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.main.spendwisely.dto.ErrorCodesType;
 import com.main.spendwisely.dto.ErrorResponseType;
 import com.main.spendwisely.dto.MonthlyDto;
+import com.main.spendwisely.dto.MonthlyListDto;
 import com.main.spendwisely.dto.ProcessingStatusType;
 import com.main.spendwisely.dto.SpendWiselyException;
 import com.main.spendwisely.dto.SpendWiselyResponse;
@@ -49,9 +50,8 @@ public class MonthlySpendingImpl implements MonthlySpendingWebService {
 	}
 
 	@Override
-	public MonthlyDto retrieveExpenses(int fromMonth, int toMonth) {
-		// TODO Auto-generated method stub
-		return null;
+	public MonthlyListDto retrieveExpenses(int fromMonth, int toMonth,int fromYear,int toYear) {
+		return monthlyService.retrieveExpenses(fromMonth,toMonth,fromYear,toYear);
 	}
 
 	@Override

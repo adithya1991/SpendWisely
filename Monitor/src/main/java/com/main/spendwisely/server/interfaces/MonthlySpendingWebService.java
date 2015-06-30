@@ -1,7 +1,5 @@
 package com.main.spendwisely.server.interfaces;
 
-import java.util.Date;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -11,13 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-
-
-
-
-
-
-import com.main.spendwisely.dto.MonthlyDto;
+import com.main.spendwisely.dto.MonthlyListDto;
 import com.main.spendwisely.dto.SpendWiselyResponse;
 
 
@@ -46,7 +38,7 @@ public interface MonthlySpendingWebService {
 	@GET
 	@Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
 	  @Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
-	  public MonthlyDto retrieveExpenses(@QueryParam("fromMonth") int fromMonth,@QueryParam("toMonth") int toMonth);
+	  public MonthlyListDto retrieveExpenses(@QueryParam("fromMonth") int fromMonth,@QueryParam("toMonth") int toMonth,@QueryParam("fromYear") int fromYear,@QueryParam("toYear") int toYear);
   
   
   
